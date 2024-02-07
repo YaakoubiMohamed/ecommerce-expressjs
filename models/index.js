@@ -24,9 +24,21 @@ db.sequelize = sequelize
 
 const User = require('./user.js');
 const Produit = require('./produit.js');
-const Categorie =require("./categorie");
+const Categorie = require("./categorie");
+const Commande = require('./commande');
+const Ligne_Commande = require('./ligne_commande')
 
 Categorie.hasMany(Produit);
 Produit.belongsTo(Categorie);
 
-sequelize.sync({force: true})
+
+User.hasMany(Commande);
+Commande.belongsTo(User);
+
+Commande.hasMany(Ligne_Commande);
+Ligne_Commande.belongsTo(Commande)
+
+Produit.hasMany(Ligne_Commande);
+Ligne_Commande.belongsTo(Produit);
+
+sequelize.sync({force: false})
