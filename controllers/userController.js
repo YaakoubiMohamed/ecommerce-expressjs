@@ -1,80 +1,89 @@
-const User = require('../models/user');
+const User = require("../models/user");
+const bcrypt = require('bcrypt');
 
+// Controller methods
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-const getAllUsers  = async (req, res) => {
-    try{
-        const users = await User.findAll();
-        res.json(users);
-    } catch(error){
-        res.status(500).json({error: error.message})
+const getUserById = async (req, res) => {
+  const userID = req.params.userID;
+  try {
+    const user = await User.findByPk(userID);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-}
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-
-const getUserById = (req,res)=>{
-    const userId = req.params.id;
-    try{
-        const user = User.findByPk(userId);
-        if(user){
-            res.json(user);
-        } else {
-            return res.status(404).json({user});
-        }
-        
-    } catch(error){
-        res.status(500).json({error: error.message})
-    }
-}
-const createUser = async (req,res) => {
-    const {nom, prenom, email, password, telephone, adresse, ville} = req.body;
+const createUser = async (req, res) => {
+  const { username, email, password } = req.body;
+  console.log(req.body)
+  try {
     
-    try{
-        console.log(req.body);
-        const newUser = await User.create({nom, prenom, email, password, telephone, adresse, ville});
-        res.status(201).json(newUser);
-    }catch(error){
-        res.status(500).json({error: error.message});
-    }
+    // Generate a salt
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
 
-}
-//if(!a) if(a == true)
+    // Hash the password with the salt
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-const updateUserById = async (req,res) => {
-    const userId = req.params.id;
-    const {nom, prenom, email, password, adresse, telephone, ville} = req.body;
-    console.log(req.body);
-    try{
-        const user = await User.findByPk(userId);
-        if(user){
-            await user.update({nom, prenom, email, password, adresse, telephone, ville})
-            res.json(user);
-        } else {
-            res.status(404).json({error: `user with id:${userId}, not found`});
-        }
-    } catch(error){
-        res.status(500).json({error: error.message});
-    }
-}
+    // Create the user with the hashed password
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-const deleteUserById = async (req, res) =>{
-    const userId = req.params.id;
-    try{
-        const user = await User.findByPk(userId);
-        if(user){
-            await user.destroy()
-            res.json({message: "User deleted"})
-        } else {
-            res.status(404).json({error: error.message})
-        }
-    } catch(error){
-        res.status(500).json({error: error.message});
+const updateUserById = async (req, res) => {
+  const userID = req.params.userID;
+  const { username, email, password } = req.body;
+  try {
+    const user = await User.findByPk(userID);
+    if (user) {
+      await user.update({ username, email, password });
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-}
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteUserById = async (req, res) => {
+  const userID = req.params.userID;
+  try {
+    const user = await User.findByPk(userID);
+    if (user) {
+      await user.destroy();
+      res.json({ message: 'User deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUserById,
-    deleteUserById
-}
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUserById,
+  deleteUserById,
+};

@@ -1,0 +1,25 @@
+<form action="/products/<%= produit.id %>" method="PUT">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<%= produit.name %>">
+  
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" value="<%= produit.price %>">
+  
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" value="<%= produit.quantity %>">
+  
+    <label for="brand">Brand:</label>
+    <input type="text" id="brand" name="brand" value="<%= produit.brand %>">
+  
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"><%= produit.description %></textarea>
+  
+    <label for="category_id">Category:</label>
+    <select id="category_id" name="category_id">
+      <% categories.forEach(category => { %>
+        <option value="<%= category.id %>" <% if (category.id == produit.category_id) { %> selected <% } %>><%= category.name %></option>
+      <% }); %>
+    </select>
+  
+    <input type="submit" value="Update Produit">
+  </form>

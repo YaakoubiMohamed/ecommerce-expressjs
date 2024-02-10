@@ -1,46 +1,46 @@
-const { Squelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
-db = require('./index');
-
+const db = require('./index.js');
 const sequelize = db.sequelize;
 
-
-const User =  sequelize.define("User",{
-    id:{
+// Define User model
+const User = sequelize.define('user', {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement:true
+        autoIncrement: true,
     },
-    nom:{
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    prenom:{
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email:{
+    nom: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique : true,
-        validate : { isEmail: true}
-    },
-    password:{
+      },
+      prenom: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    adresse:{
+        allowNull: false,
+      },
+      email: {
         type: DataTypes.STRING,
-        allowNull: true
-    },
-    telephone:{
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
+      },
+      password: {
         type: DataTypes.STRING,
-        allowNull: false        
-    },
-    ville:{
+        allowNull: false,
+      },
+      adresse: {
         type: DataTypes.STRING,
-        allowNull:true
-    }
+        allowNull: false,
+      },
+      telephone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [10, 10], // Enforce 10-digit phone number length
+        },
+      },
 });
 
 

@@ -1,37 +1,42 @@
-const { Squelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require("sequelize");
 
-db = require('./index');
-
+const db = require('./index.js');
 const sequelize = db.sequelize;
 
+const Produit = sequelize.define("produit", {
 
-const Produit =  sequelize.define("Produit",{
-    id:{
+    id: {
         type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
         primaryKey: true,
-        autoIncrement:true
     },
-    nom:{
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    prix:{
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    marque:{
+    nom: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    quantite:{
+      },
+      prix: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+          min: 0, // Enforce non-negative price
+        },
+      },
+      quantite: {
         type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    description:{
+        allowNull: false,
+        validate: {
+          min: 0, // Enforce non-negative quantity
+        },
+      },
+      marque: {
         type: DataTypes.STRING,
-        allowNull: true
-    },
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
 });
-
 
 module.exports = Produit;

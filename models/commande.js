@@ -1,18 +1,19 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require("sequelize");
 
-const db = require('./index');
+const db = require('./index.js');
 const sequelize = db.sequelize;
 
 const Commande = sequelize.define('commande', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
-    date:{
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-})
+    commandeDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+    },
+});
 
-module.exports = Commande
+module.exports = Commande;
